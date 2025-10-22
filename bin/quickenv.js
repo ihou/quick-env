@@ -126,7 +126,7 @@ function cmdShowDefault() {
   if (!name || !cfg.envs[name]) {
     console.log(c.cyan(c.bold("Current preset: ")) + c.yellow("-"));
     console.log("");
-    console.log(c.dim("No preset selected. Run `quick-env use` to choose or `quick-env list` to view."));
+    console.log(c.dim("No preset selected. Run `quickenv use` to choose or `quickenv list` to view."));
     return;
   }
   const st = presetApplyStatus(cfg, name);
@@ -137,19 +137,19 @@ function cmdShowDefault() {
 }
 
 function cmdInit() {
-  // Print helper function that evals exports from `quick-env use`.
-  // Usage: source <(quick-env init)
-  const fn = `# quick-env shell helper (bash/zsh)
+  // Print helper function that evals exports from `quickenv use`.
+  // Usage: source <(quickenv init)
+  const fn = `# quickenv shell helper (bash/zsh)
 quickenv() {
   if [ "$1" = "use" ]; then
     shift
     local __out
-    if ! __out="$(command quick-env use "$@" </dev/tty)"; then
+    if ! __out="$(command quickenv use "$@" </dev/tty)"; then
       return $?
     fi
     eval "$__out"
   else
-    command quick-env "$@"
+    command quickenv "$@"
   fi
 }
 `;
@@ -193,7 +193,7 @@ function cmdShow(name) {
   const cfg = readConfig();
   if (!name || !cfg.envs[name]) {
     console.error(c.red(`Preset not found: ${name || "(missing)"}`));
-    console.error(c.dim("Use `quick-env list` to view existing presets."));
+    console.error(c.dim("Use `quickenv list` to view existing presets."));
     process.exit(1);
   }
   const isCurrent = cfg.current === name;
@@ -211,7 +211,7 @@ async function cmdUse(name) {
   if (!name) {
     const names = Object.keys(cfg.envs).sort();
     if (names.length === 0) {
-      console.error(c.red("No presets available. Run `quick-env set` to create variables first."));
+      console.error(c.red("No presets available. Run `quickenv set` to create variables first."));
       process.exit(1);
     }
     const picked = await selectPresetInteractively(names, cfg.current);
@@ -223,7 +223,7 @@ async function cmdUse(name) {
   }
   if (!cfg.envs[name]) {
     console.error(`Preset not found: ${name}`);
-    console.error("Use `quick-env list` to view existing presets.");
+    console.error("Use `quickenv list` to view existing presets.");
     process.exit(1);
   }
   const vars = cfg.envs[name] || {};
@@ -234,7 +234,7 @@ async function cmdUse(name) {
     }
     if (hasNewline(v)) {
       console.error(`Value contains newline; cannot export: ${k}`);
-      console.error("Please make it a single line via `quick-env set`.");
+      console.error("Please make it a single line via `quickenv set`.");
       process.exit(1);
     }
   }
@@ -270,7 +270,7 @@ async function selectPresetInteractively(names, current) {
         needClose = true;
       }
     } catch (e) {
-      console.error(c.red("Non-interactive environment. Provide a name: quick-env use <name>"));
+      console.error(c.red("Non-interactive environment. Provide a name: quickenv use <name>"));
       return resolve(null);
     }
     const hdr = `${c.cyan(c.bold("Select a preset:"))}`;
@@ -506,7 +506,7 @@ async function cmdEditInteractive() {
   const cfg = readConfig();
   let names = Object.keys(cfg.envs).sort();
   if (names.length === 0) {
-    console.error(c.red("No presets to edit. Run `quick-env set` first."));
+    console.error(c.red("No presets to edit. Run `quickenv set` first."));
     return;
   }
   while (true) {
@@ -727,7 +727,7 @@ async function cmdSetInteractive() {
 function cmdSetNonInteractive(presetName, key, value) {
   const cfg = readConfig();
   if (!presetName) {
-    console.error("Provide a preset: quick-env set <preset> <KEY> <VALUE>");
+    console.error("Provide a preset: quickenv set <preset> <KEY> <VALUE>");
     process.exit(1);
   }
   if (!cfg.envs[presetName]) cfg.envs[presetName] = {};
@@ -749,7 +749,7 @@ function cmdDel(name, key) {
   const cfg = readConfig();
   if (!name || !cfg.envs[name]) {
     console.error(`Preset not found: ${name || "(missing)"}`);
-    console.error("Use `quick-env list` to view existing presets.");
+    console.error("Use `quickenv list` to view existing presets.");
     process.exit(1);
   }
   if (!key) {
@@ -781,18 +781,18 @@ function cmdCurrent() {
 }
 
 function printUsage() {
-  console.log("quick-env — Multi-preset environment variables CLI");
+  console.log("quickenv — Multi-preset environment variables CLI");
   console.log("");
   console.log("Usage:");
-  console.log("  quick-env            Open interactive command palette");
-  console.log("  quick-env init       Print shell function");
-  console.log("  quick-env list       List all presets");
-  console.log("  quick-env show <name>     Show variables for a preset");
-  console.log("  quick-env use [name]      Interactively choose when name omitted");
-  console.log("  quick-env set        Interactive set variables");
-  console.log("  quick-env edit       Interactive edit variables (select preset/KEY)");
-  console.log("  quick-env del [name] [KEY] Interactive delete key or entire preset");
-  console.log("  quick-env current    Print current preset name");
+  console.log("  quickenv            Open interactive command palette");
+  console.log("  quickenv init       Print shell function");
+  console.log("  quickenv list       List all presets");
+  console.log("  quickenv show <name>     Show variables for a preset");
+  console.log("  quickenv use [name]      Interactively choose when name omitted");
+  console.log("  quickenv set        Interactive set variables");
+  console.log("  quickenv edit       Interactive edit variables (select preset/KEY)");
+  console.log("  quickenv del [name] [KEY] Interactive delete key or entire preset");
+  console.log("  quickenv current    Print current preset name");
 }
 
 async function cmdRootInteractive() {
@@ -878,7 +878,7 @@ function main() {
       break;
     case "set":
       if (argv.length >= 4) {
-        // Non-interactive: quick-env set <preset> <KEY> <VALUE>
+        // Non-interactive: quickenv set <preset> <KEY> <VALUE>
         cmdSetNonInteractive(argv[1], argv[2], argv.slice(3).join(" "));
       } else {
         cmdSetInteractive();

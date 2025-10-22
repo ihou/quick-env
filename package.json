@@ -3,7 +3,7 @@
   "version": "0.1.2",
   "description": "Simple multi-preset environment variable manager CLI",
   "bin": {
-    "quick-env": "bin/quick-env.js"
+    "quickenv": "bin/quickenv.js"
   },
   "type": "commonjs",
   "private": false,
@@ -27,7 +27,7 @@
     "access": "public"
   },
   "scripts": {
-    "start": "node bin/quick-env.js"
+    "start": "node bin/quickenv.js"
   },
   "dependencies": {}
 }
